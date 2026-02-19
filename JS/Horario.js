@@ -34,11 +34,12 @@ function obtenerDatos() {
   const celdas = fila.querySelectorAll("td");
 
   const asignatura = celdas[1].innerText;
+  const grupo = celdas[2].innerText;
   const dia = celdas[3].innerText;
   const horario = celdas[4].innerText;
   const horaInicio = parseInt(horario.split(":")[0]);
 
-  eventos.push({ asignatura, dia, horaInicio });
+  eventos.push({ asignatura, grupo, dia, horario, horaInicio });
 
  });
 
@@ -84,7 +85,11 @@ function generarHoras() {
    const clase = datos.find(e => e.dia === dia && e.horaInicio === hora);
 
    filas += clase
-    ? `<td class="bg-primary text-white">${clase.asignatura}</td>`
+    ? `<td class="bg-primary text-white">
+        <div class="fw-bold">${clase.asignatura}</div>
+        <div class="small">${clase.grupo}</div>
+        <div class="small">${clase.horario}</div>
+       </td>`
     : `<td></td>`;
 
   });
