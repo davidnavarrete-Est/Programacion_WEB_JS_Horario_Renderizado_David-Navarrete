@@ -2,69 +2,97 @@ const btnVista = document.getElementById("btnVista");
 const contenedor = document.getElementById("contenedorHorario");
 
 let vistaActual = "lista";
-const htmlOriginal = contenedor.innerHTML;
+const tablaOriginal = contenedor.innerHTML;
 
-function extraerDatosTabla(){
+const datos = obtenerDatos();
+
+btnVista.addEventListener("click", () => {
+
+ if (vistaActual === "lista") {
+  renderCalendario();
+  btnVista.textContent = "Vista Lista";
+  btnVista.classList.remove("btn-primary");
+  btnVista.classList.add("btn-outline-primary");
+  vistaActual = "calendario";
+ } else {
+  contenedor.innerHTML = tablaOriginal;
+  btnVista.textContent = "Vista Calendario";
+  btnVista.classList.remove("btn-outline-primary");
+  btnVista.classList.add("btn-primary");
+  vistaActual = "lista";
+ }
+
+});
+
+function obtenerDatos() {
+
  const filas = document.querySelectorAll("tbody tr");
  const eventos = [];
 
  filas.forEach(fila => {
+
   const celdas = fila.querySelectorAll("td");
-  eventos.push({
-   asignatura: celdas[1].innerText,
-   dia: celdas[3].innerText,
-   hora: parseInt(celdas[4].innerText)
-  });
+
+  const asignatura = celdas[1].innerText;
+  const dia = celdas[3].innerText;
+  const horario = celdas[4].innerText;
+  const horaInicio = parseInt(horario.split(":")[0]);
+
+  eventos.push({ asignatura, dia, horaInicio });
+
  });
 
  return eventos;
+
 }
 
-const datos = extraerDatosTabla();
+function renderCalendario() {
 
-function generarHoras(){
+ contenedor.innerHTML = `
+  <div class="table-responsive">
+   <table class="table table-bordered text-center align-middle">
+    <thead class="table-light">
+     <tr>
+      <th>Hora</th>
+      <th>Lunes</th>
+      <th>Martes</th>
+      <th>Miércoles</th>
+      <th>Jueves</th>
+      <th>Viernes</th>
+     </tr>
+    </thead>
+    <tbody>
+     ${generarHoras()}
+    </tbody>
+   </table>
+  </div>
+ `;
+
+}
+
+function generarHoras() {
+
  let filas = "";
- const dias = ["Lunes","Martes","Miércoles","Jueves","Viernes"];
+ const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
- for(let h = 1; h <= 17; h++){
-  filas += `<tr><td>${h}:00</td>`;
-  dias.forEach(() => {
-   filas += `<td></td>`;
+ for (let hora = 1; hora <= 17; hora++) {
+
+  filas += `<tr><td><strong>${hora}:00</strong></td>`;
+
+  dias.forEach(dia => {
+
+   const clase = datos.find(e => e.dia === dia && e.horaInicio === hora);
+
+   filas += clase
+    ? `<td class="bg-primary text-white">${clase.asignatura}</td>`
+    : `<td></td>`;
+
   });
+
   filas += `</tr>`;
+
  }
 
  return filas;
-}
 
-function renderCalendario(){
- contenedor.innerHTML = `
-  <table class="table table-bordered text-center align-middle">
-   <thead class="table-light">
-    <tr>
-     <th>Hora</th>
-     <th>Lunes</th>
-     <th>Martes</th>
-     <th>Miércoles</th>
-     <th>Jueves</th>
-     <th>Viernes</th>
-    </tr>
-   </thead>
-   <tbody>
-    ${generarHoras()}
-   </tbody>
-  </table>
- `;
 }
-
-btnVista.addEventListener("click", () => {
- if(vistaActual === "lista"){
-  renderCalendario();
-  btnVista.textContent = "Vista Lista";
-  vistaActual = "calendario";
- } else {
-  contenedor.innerHTML = htmlOriginal;
-  btnVista.textContent = "Vista Calendario";
-  vistaActual = "lista";
- }
-});
