@@ -2,14 +2,32 @@ const btnVista = document.getElementById("btnVista");
 const contenedor = document.getElementById("contenedorHorario");
 
 let vistaActual = "lista";
-const tablaOriginal = contenedor.innerHTML;
+const htmlOriginal = contenedor.innerHTML;
 
-function generarHorasVacias() {
+function extraerDatosTabla(){
+ const filas = document.querySelectorAll("tbody tr");
+ const eventos = [];
+
+ filas.forEach(fila => {
+  const celdas = fila.querySelectorAll("td");
+  eventos.push({
+   asignatura: celdas[1].innerText,
+   dia: celdas[3].innerText,
+   hora: parseInt(celdas[4].innerText)
+  });
+ });
+
+ return eventos;
+}
+
+const datos = extraerDatosTabla();
+
+function generarHoras(){
  let filas = "";
  const dias = ["Lunes","Martes","Miércoles","Jueves","Viernes"];
 
- for (let hora = 1; hora <= 17; hora++) {
-  filas += `<tr><td><strong>${hora}:00</strong></td>`;
+ for(let h = 1; h <= 17; h++){
+  filas += `<tr><td>${h}:00</td>`;
   dias.forEach(() => {
    filas += `<td></td>`;
   });
@@ -19,9 +37,8 @@ function generarHorasVacias() {
  return filas;
 }
 
-function renderCalendario() {
+function renderCalendario(){
  contenedor.innerHTML = `
- <div class="table-responsive">
   <table class="table table-bordered text-center align-middle">
    <thead class="table-light">
     <tr>
@@ -34,25 +51,20 @@ function renderCalendario() {
     </tr>
    </thead>
    <tbody>
-    ${generarHorasVacias()}
+    ${generarHoras()}
    </tbody>
   </table>
- </div>
  `;
 }
 
 btnVista.addEventListener("click", () => {
- if (vistaActual === "lista") {
+ if(vistaActual === "lista"){
   renderCalendario();
   btnVista.textContent = "Vista Lista";
-  btnVista.classList.remove("btn-primary");
-  btnVista.classList.add("btn-outline-primary");
   vistaActual = "calendario";
  } else {
-  contenedor.innerHTML = tablaOriginal;
+  contenedor.innerHTML = htmlOriginal;
   btnVista.textContent = "Vista Calendario";
-  btnVista.classList.remove("btn-outline-primary");
-  btnVista.classList.add("btn-primary");
   vistaActual = "lista";
  }
 });
