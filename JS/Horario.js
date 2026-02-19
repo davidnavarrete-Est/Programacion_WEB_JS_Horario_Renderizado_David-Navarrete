@@ -10,13 +10,13 @@ btnVista.addEventListener("click", () => {
 
  if (vistaActual === "lista") {
   renderCalendario();
-  btnVista.textContent = "Vista Lista";
+  btnVista.textContent = "Ver Lista";
   btnVista.classList.remove("btn-primary");
   btnVista.classList.add("btn-outline-primary");
   vistaActual = "calendario";
  } else {
   contenedor.innerHTML = tablaOriginal;
-  btnVista.textContent = "Vista Calendario";
+  btnVista.textContent = "Ver Calendario";
   btnVista.classList.remove("btn-outline-primary");
   btnVista.classList.add("btn-primary");
   vistaActual = "lista";
@@ -75,7 +75,7 @@ function generarHoras() {
  let filas = "";
  const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
- for (let hora = 1; hora <= 17; hora++) {
+ for (let hora = 8; hora <= 17; hora++) {
 
   filas += `<tr><td><strong>${hora}:00</strong></td>`;
 
